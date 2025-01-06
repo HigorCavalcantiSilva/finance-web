@@ -92,11 +92,13 @@ export default defineComponent({
     return {
       linksList,
       leftDrawerOpen: ref(false),
-      showMenu: ref(true),
+      showMenu: false,
     }
   },
   mounted() {
-    this.showMenu = this.$route.meta.showMenu != undefined ? this.$route.meta.showMenu : true
+    this.showMenu = this.$route.meta.showMenu == undefined ? true : this.$route.meta.showMenu
+
+    this.validateJWT()
   },
   watch: {
     '$route.meta.showMenu': function (showMenuFlag) {
@@ -106,6 +108,18 @@ export default defineComponent({
   methods: {
     toggleLeftDrawer() {
       this.leftDrawerOpen = !this.leftDrawerOpen
+    },
+    async validateJWT() {
+      const token = localStorage.getItem('authToken')
+      if (!token || (await !this.isValidJWT(token))) {
+        localStorage.removeItem('authToken')
+        localStorage.removeItem('idUser')
+        this.$router.push('/login')
+      }
+    },
+    async isValidJWT(token) {
+      const { data } = this.$api.post('/users/validate-token', { token })
+      return data
     },
   },
 })

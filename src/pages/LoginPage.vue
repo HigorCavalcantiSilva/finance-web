@@ -31,7 +31,10 @@ export default defineComponent({
   methods: {
     async onSubmit() {
       try {
-        await this.$api.post('/users/login', this.credentials)
+        const { data } = await this.$api.post('/users/login', this.credentials)
+
+        localStorage.setItem('authToken', data.token)
+        localStorage.setItem('idUser', data.id)
 
         this.$q.notify({
           color: 'green-4',
@@ -39,6 +42,8 @@ export default defineComponent({
           icon: 'cloud_done',
           message: 'Login realizado com sucesso',
         })
+
+        this.$router.push('/')
       } catch {
         this.$q.notify({
           color: 'red-5',
