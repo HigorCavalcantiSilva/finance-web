@@ -92,35 +92,41 @@ export default defineComponent({
     return {
       linksList,
       leftDrawerOpen: ref(false),
-      showMenu: false,
+      showMenu: ref(true),
     }
   },
   mounted() {
-    this.showMenu = this.$route.meta.showMenu == undefined ? true : this.$route.meta.showMenu
+    this.validateToken()
+    this.showMenu = this.$route.meta.showMenu ?? true;
 
-    this.validateJWT()
+    if(!this.showMenu)
+        this.leftDrawerOpen = false;
   },
   watch: {
-    '$route.meta.showMenu': function (showMenuFlag) {
-      this.showMenu = showMenuFlag || true
+    $route(to) {
+      this.showMenu = to.meta.showMenu ?? true;
+
+      if(!this.showMenu)
+        this.leftDrawerOpen = false;
     },
   },
   methods: {
     toggleLeftDrawer() {
       this.leftDrawerOpen = !this.leftDrawerOpen
     },
-    async validateJWT() {
-      const token = localStorage.getItem('authToken')
-      if (!token || (await !this.isValidJWT(token))) {
-        localStorage.removeItem('authToken')
-        localStorage.removeItem('idUser')
-        this.$router.push('/login')
+    async validateToken() {
+      const token = localStorage.getItem("authToken")
+      if(token != null) {
+        const { data } = await this.$api.post('/users/validate-token', {token})
+        if(!data) {
+          localStorage.removeItem("authToken")
+          localStorage.removeItem("userId")
+          this.$router.push("/login")
+        }
+      } else {
+        this.$router.push("/login")
       }
-    },
-    async isValidJWT(token) {
-      const { data } = this.$api.post('/users/validate-token', { token })
-      return data
-    },
+    }
   },
 })
 </script>
