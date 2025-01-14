@@ -20,7 +20,7 @@
 
     <q-drawer v-model="leftDrawerOpen" show-if-above bordered>
       <q-list>
-        <q-item-label header> Essential Links </q-item-label>
+        <q-item-label header> Menu Principal </q-item-label>
 
         <EssentialLink v-for="link in linksList" :key="link.title" v-bind="link" />
       </q-list>
@@ -38,46 +38,24 @@ import EssentialLink from 'components/EssentialLink.vue'
 
 const linksList = [
   {
-    title: 'Docs',
-    caption: 'quasar.dev',
-    icon: 'school',
-    link: 'https://quasar.dev',
+    title: 'Salário',
+    icon: 'request_quote',
+    link: '/salary',
   },
   {
-    title: 'Github',
-    caption: 'github.com/quasarframework',
-    icon: 'code',
-    link: 'https://github.com/quasarframework',
+    title: 'Ganhos',
+    icon: 'attach_money',
+    link: '/earnings',
   },
   {
-    title: 'Discord Chat Channel',
-    caption: 'chat.quasar.dev',
-    icon: 'chat',
-    link: 'https://chat.quasar.dev',
+    title: 'Despesas',
+    icon: 'money_off',
+    link: '/expences',
   },
   {
-    title: 'Forum',
-    caption: 'forum.quasar.dev',
-    icon: 'record_voice_over',
-    link: 'https://forum.quasar.dev',
-  },
-  {
-    title: 'Twitter',
-    caption: '@quasarframework',
-    icon: 'rss_feed',
-    link: 'https://twitter.quasar.dev',
-  },
-  {
-    title: 'Facebook',
-    caption: '@QuasarFramework',
-    icon: 'public',
-    link: 'https://facebook.quasar.dev',
-  },
-  {
-    title: 'Quasar Awesome',
-    caption: 'Community Quasar projects',
-    icon: 'favorite',
-    link: 'https://awesome.quasar.dev',
+    title: 'Poupança',
+    icon: 'savings',
+    link: '/saving',
   },
 ]
 
@@ -96,37 +74,22 @@ export default defineComponent({
     }
   },
   mounted() {
-    this.validateToken()
-    this.showMenu = this.$route.meta.showMenu ?? true;
+    this.showMenu = this.$route.meta.showMenu ?? true
 
-    if(!this.showMenu)
-        this.leftDrawerOpen = false;
+    if (!this.showMenu) this.leftDrawerOpen = false
   },
   watch: {
     $route(to) {
-      this.showMenu = to.meta.showMenu ?? true;
+      this.$validateToken()
+      this.showMenu = to.meta.showMenu ?? true
 
-      if(!this.showMenu)
-        this.leftDrawerOpen = false;
+      if (!this.showMenu) this.leftDrawerOpen = false
     },
   },
   methods: {
     toggleLeftDrawer() {
       this.leftDrawerOpen = !this.leftDrawerOpen
     },
-    async validateToken() {
-      const token = localStorage.getItem("authToken")
-      if(token != null) {
-        const { data } = await this.$api.post('/users/validate-token', {token})
-        if(!data) {
-          localStorage.removeItem("authToken")
-          localStorage.removeItem("userId")
-          this.$router.push("/login")
-        }
-      } else {
-        this.$router.push("/login")
-      }
-    }
   },
 })
 </script>

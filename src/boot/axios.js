@@ -44,6 +44,20 @@ export default defineBoot(({ app, router }) => {
   app.config.globalProperties.$redirectToLogin = () => {
     router.push('/login') // Redirecionar para a página de login
   }
+
+  app.config.globalProperties.$validateToken = async () => {
+    const token = localStorage.getItem('authToken')
+    if (token != null) {
+      const { data } = await api.post('/users/validate-token', { token })
+      if (!data) {
+        localStorage.removeItem('authToken')
+        localStorage.removeItem('userId')
+        router.push('/login')
+      }
+    } else {
+      router.push('/login')
+    }
+  }
 })
 
 export { api }
