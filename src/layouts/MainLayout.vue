@@ -12,9 +12,9 @@
           v-if="showMenu"
         />
 
-        <q-toolbar-title> Quasar App </q-toolbar-title>
+        <q-toolbar-title> Finances </q-toolbar-title>
 
-        <div>Quasar v{{ $q.version }}</div>
+        <div>By Higor Cavalcanti</div>
       </q-toolbar>
     </q-header>
 
@@ -40,22 +40,22 @@ const linksList = [
   {
     title: 'Salário',
     icon: 'request_quote',
-    link: '/salary',
+    link: '/#/salary',
   },
   {
     title: 'Ganhos',
     icon: 'attach_money',
-    link: '/earnings',
+    link: '/#/earnings',
   },
   {
     title: 'Despesas',
     icon: 'money_off',
-    link: '/expences',
+    link: '/#/expences',
   },
   {
     title: 'Poupança',
     icon: 'savings',
-    link: '/saving',
+    link: '/#/saving',
   },
 ]
 
